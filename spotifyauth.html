@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spotify Authorization</title>
+</head>
+<body>
+    <h1>Welcome to Spotify Authorization</h1>
+    <p>Click the button below to authorize your Spotify account.</p>
+    <button id="authorizeButton">Authorize with Spotify</button>
+
+    <script>
+        // Replace the following values with your Spotify Application's client ID and redirect URI
+        const clientId = 'd0108f1e76da4ac482d45085cf711551';
+        const redirectUri = 'https://andreasotten03.github.io/myfirsthtml/index.html';
+
+        const authorizeButton = document.getElementById('authorizeButton');
+
+        authorizeButton.addEventListener('click', () => {
+            // Construct the Spotify authorization URL
+            const spotifyAuthUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=user-read-private%20user-read-email&state=authorize`;
+
+            // Redirect the user to the Spotify authorization page
+            window.location.href = spotifyAuthUrl;
+        });
+    </script>
+</body>
+</html>
