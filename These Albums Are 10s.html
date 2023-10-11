@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Album Collection</title>
+    <style>
+        body {
+            background-color: ivory;
+            font-family: "Times New Roman", sans-serif;
+            color: navy;
+            margin: 20px;
+	    font-style: italic;
+        }
+        input {
+            width: 98%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        .albums {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .album-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            width: 200px;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <h2><i>Add Music</i></h2>
+    <input type="text" id="albumName" placeholder="Album Name">
+    <input type="text" id="artist" placeholder="Artist">
+    <input type="text" id="songCount" placeholder="Number of Songs">
+    <input type="file" id="albumImage">
+    <button id="addAlbum">Add Album</button>
+
+    <h2><i>My Music</i></h2>
+    <div class="albums" id="albumList">
+    </div>
+
+    <script>
+        document.getElementById('addAlbum').addEventListener('click', function () {
+            const albumName = document.getElementById('albumName').value;
+            const artist = document.getElementById('artist').value;
+            const songcount = document.getElementById('songCount').value;
+            const imageInput = document.getElementById('albumImage');
+
+            if (imageInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const base64Image = e.target.result.split(',')[1];
+
+                    const albumData = {
+                        name: albumName,
+                        artist: artist,
+                        songcount: songcount,
+                        image: base64Image,
+                        rating: 0,
+                    };
+
+                    const albums = JSON.parse(localStorage.getItem('albums')) || [];
+                    albums.push(albumData);
+                    localStorage.setItem('albums', JSON.stringify(albums));
+
+                    renderAlbums();
+                };
+
+                reader.readAsDataURL(imageInput.files[0]);
+            }
+        });
+
+     window.addEventListener('load', function () {
+         renderAlbums();
+     });
+
+        function renderAlbums() {
+            const albums = JSON.parse(localStorage.getItem('albums')) || [];
+            const albumList = document.getElementById('albumList');
+            albumList.innerHTML = '';
+
+            albums.forEach((album, index) => {
+                const albumCard = document.createElement('div');
+                albumCard.classList.add('album-card');
+                albumCard.innerHTML = `
+                    <img src="data:image/jpeg;base64,${album.image}" alt="${album.name} Cover width="200" height="200" class="album-image">
+                    <div class="album-info">
+                        <h2>${album.name}</h2>
+                        <h3>${album.artist}</h3>
+                        <p>${album.songcount} Songs</p>
+                    </div>
+                `;
+                albumList.appendChild(albumCard);
+            });
+        }
+    </script>
+
+</body>
+</html>
